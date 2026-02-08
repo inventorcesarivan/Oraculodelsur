@@ -1588,7 +1588,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
-<!-- ===== MOBILE BLOCKER OVERLAY ===== -->
+<!-- ===== MOBILE BLOCKER OVERLAY (CSS ONLY) ===== -->
 <div id="mobile-blocker">
   <div class="mobile-box">
     <h2>Versión móvil en desarrollo</h2>
@@ -1604,11 +1604,11 @@ document.addEventListener("DOMContentLoaded", () => {
 #mobile-blocker{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.88);
+  background:rgba(0,0,0,0.9);
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:200000;
+  z-index:999999;
 }
 #mobile-blocker .mobile-box{
   background:#ffffff;
@@ -1617,33 +1617,18 @@ document.addEventListener("DOMContentLoaded", () => {
   padding:28px 24px;
   border-radius:18px;
   text-align:center;
-  box-shadow:0 30px 60px rgba(0,0,0,0.6);
+  box-shadow:0 30px 60px rgba(0,0,0,0.7);
 }
-#mobile-blocker h2{
-  margin:0 0 14px 0;
-  font-size:22px;
-}
-#mobile-blocker p{
-  font-size:15px;
-  line-height:1.5;
-}
-#mobile-blocker .soon{
-  margin-top:14px;
-  font-weight:700;
+#mobile-blocker h2{margin:0 0 14px;font-size:22px;}
+#mobile-blocker p{font-size:15px;line-height:1.5;}
+#mobile-blocker .soon{margin-top:14px;font-weight:700;}
+
+/* 🔒 MOBILE ONLY BLOCK */
+@media (max-width: 768px){
+  #mobile-blocker{display:flex;}
+  body{overflow:hidden;}
 }
 </style>
-
-<script>
-(function(){
-  function esMovil(){
-    return window.innerWidth <= 768;
-  }
-  if(esMovil()){
-    var blk = document.getElementById("mobile-blocker");
-    if(blk){ blk.style.display = "flex"; }
-  }
-})();
-</script>
 <!-- ===== END MOBILE BLOCKER ===== -->
 
 </body>
