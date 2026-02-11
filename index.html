@@ -553,6 +553,22 @@ button:not(.donation-close){
   color: var(--accent) !important;
 }
 
+
+/* ===== ACTIVE / SELECTED BUTTON STATE ===== */
+button.selected{
+  background: var(--accent) !important;
+  color: #000 !important;
+  box-shadow: 0 0 18px rgba(0,0,0,0.45);
+  transform: scale(1.04);
+}
+
+.mode button.selected,
+.menu-content button.selected,
+.option-block button.selected{
+  background: var(--accent) !important;
+  color:#000 !important;
+}
+
 </style>
 
 </head>
@@ -579,14 +595,14 @@ button:not(.donation-close){
       <h2>CONSULTA</h2>
       <div class="panel-offset">
       <div style="text-align:center;font-size:18px;opacity:0.9;margin-bottom:14px;position:relative;top:-18px;">
-        Elije entre.
+        Para realizar una consulta, primero elige el modo.
       </div>
       <div class="mode">
-        <button id="simpleBtn" class="active">Modo simple</button>
+        <button class="selected" id="simpleBtn" class="active">Modo simple</button>
         <button id="ritualBtn">Modo ritual</button>
       </div>
       <div class="question-hint title-hint" id="questionHint"></div>
-      <textarea id="question" placeholder="Escribe tu pregunta aquí, para activar el botón de consulta."></textarea>
+      <textarea id="question" placeholder="Escribe aquí tu consulta (mínimo 5 palabras) Al hacerlo se activará el botón de consultas."></textarea>
       <button class="btn-main" id="startBtn" style="padding:12px;font-size:16px;">Realizar consulta</button>
 
       <div class="menu-wrapper" id="menuWrapper">
@@ -1689,6 +1705,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 })();
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  function setupToggle(groupSelector){
+    document.querySelectorAll(groupSelector).forEach(container=>{
+      const buttons = container.querySelectorAll("button");
+      buttons.forEach(btn=>{
+        btn.addEventListener("click", function(){
+
+          if(btn.classList.contains("btn-main")) return;
+
+          buttons.forEach(b=>b.classList.remove("selected"));
+          btn.classList.add("selected");
+        });
+      });
+    });
+  }
+
+  setupToggle(".mode");
+  setupToggle(".menu-content");
+  setupToggle(".option-block");
+
+});
 </script>
 
 </body>
