@@ -609,13 +609,28 @@ button.selected{
 
 
 <style>
-/* ===== FINAL FORCE: REALIZAR CONSULTA BLACK TEXT + WHITE OUTLINE ===== */
-body .btn-main,
-body .btn-main *{
+
+
+
+<style>
+/* ===== ULTRA FORCE: REALIZAR CONSULTA ALWAYS BLACK + WHITE OUTLINE ===== */
+
+#startBtn,
+.btn-main,
+button.btn-main,
+.btn-main.selected,
+body[data-tema] .btn-main,
+body[data-tema] .btn-main.selected{
   color:#000000 !important;
-  -webkit-text-stroke:1.5px #ffffff !important;
+  -webkit-text-stroke:1.6px #ffffff !important;
   text-shadow:none !important;
   filter:none !important;
+  mix-blend-mode:normal !important;
+}
+
+/* Prevent theme accent override */
+button.btn-main{
+  color:#000000 !important;
 }
 </style>
 
@@ -646,8 +661,8 @@ body .btn-main *{
         Para realizar una consulta, primero elige el modo.
       </div>
       <div class="mode">
-        <button class="selected" id="simpleBtn" class="active">Modo simple</button>
-        <button id="ritualBtn">Modo ritual</button>
+        <button class="selected" id="simpleBtn" class="active">Ritual simple</button>
+        <button id="ritualBtn">Ritual manual</button>
       </div>
       <div class="question-hint title-hint" id="questionHint"></div>
       <textarea id="question" placeholder="Escribe aquí tu consulta (mínimo 5 palabras) Al hacerlo se activará el botón de consultas."></textarea>
