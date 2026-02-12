@@ -503,6 +503,18 @@ body *{
   box-shadow:0 6px 18px rgba(0,0,0,0.35);
 }
 
+
+/* ===== PULSE EFFECT FOR VER RESULTADO COMPLETO ===== */
+.btn-extend.pulse-result{
+  animation:pulseBtn 1.8s ease-in-out infinite;
+}
+
+
+/* ===== PULSE EFFECT FOR MENU BUTTON ===== */
+.menu-btn.pulse-menu{
+  animation:pulseBtn 1.8s ease-in-out infinite;
+}
+
 </style>
 
 <style>
@@ -634,6 +646,84 @@ button.btn-main{
 }
 </style>
 
+
+<style>
+/* ===== HEXAGRAM SYMBOL ENHANCEMENT ===== */
+.hex-char{
+  font-size:96px !important;
+  animation:hexPulse 2s ease-in-out infinite;
+  text-shadow:
+    0 0 12px rgba(230,197,111,0.6),
+    0 0 24px rgba(230,197,111,0.4);
+}
+
+@keyframes hexPulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+
+/* ===== SHORTER HEXAGRAM DESCRIPTION (visual clamp) ===== */
+.hex-desc{
+  display:-webkit-box;
+  -webkit-line-clamp:6;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+</style>
+
+
+<style>
+/* ===== SLOWER RESULT APPEARANCE ===== */
+.result-final{
+  transition:opacity 1.6s ease, transform 1.6s ease !important;
+}
+</style>
+
+
+<style>
+/* ===== SECOND CONSULT BUTTON PULSE ===== */
+#anotherConsultBtn.show{
+  animation:pulseBtn 1.8s ease-in-out infinite;
+}
+</style>
+
+
+<style>
+/* ===== RESULT BUTTONS LOWER POSITION ===== */
+.result-final .btn-extend,
+#anotherConsultBtn{
+  margin-top:32px !important;
+}
+</style>
+
+
+<style>
+/* ===== RESULT BUTTONS MUCH LOWER (~2cm more) ===== */
+.result-final .btn-extend,
+#anotherConsultBtn{
+  margin-top:95px !important; /* ~2cm visual space */
+}
+
+/* ===== RITUAL THROW BUTTON TEXT ENHANCEMENT ===== */
+#throw{
+  font-weight:700 !important;
+  font-size:16px !important;
+  -webkit-text-stroke:1px rgba(0,0,0,0.9) !important;
+  text-shadow:
+    0 2px 4px rgba(0,0,0,0.85),
+    0 0 2px rgba(0,0,0,0.9);
+}
+</style>
+
+
+<style>
+/* ===== ADJUST ONLY 'REALIZAR OTRA CONSULTA' POSITION ===== */
+#anotherConsultBtn{
+  margin-top:45px !important; /* raised to better visual balance */
+}
+</style>
+
 </head>
 
 <body>
@@ -669,7 +759,7 @@ button.btn-main{
       <button class="btn-main" id="startBtn" style="padding:12px;font-size:16px;">Realizar consulta</button>
 
       <div class="menu-wrapper" id="menuWrapper">
-        <button class="menu-btn" id="menuBtn" style="margin-top:34px;">Menu</button>
+        <button class="menu-btn pulse-menu" id="menuBtn" style="margin-top:34px;">Menu</button>
       </div>
 
       <button class="btn-secondary" id="resetBtn" style="margin-top:12px;border:1px solid rgba(255,255,255,0.6);">Reiniciar</button>
@@ -722,7 +812,7 @@ button.btn-main{
         <button class="btn-main" id="throw">Arrojar monedas del oráculo</button>
 <div id="manualOptionBlock" style="margin-top:24px;text-align:center;">
   <div style="font-size:13px;opacity:0.8;margin-bottom:30px;">O si prefieres puedes usar tus propias monedas (reales)</div>
-  <button class="btn-extend" id="manualRitualBtn" style="margin-top:10px;">
+  <button class="btn-extend pulse-result" id="manualRitualBtn" style="margin-top:10px;">
     Usar mis propias monedas
   </button>
 </div>
@@ -731,7 +821,7 @@ button.btn-main{
           <div class="hex-char" id="hexChar"></div>
           <div class="hex-title" id="hexTitle"></div>
           <div class="hex-desc" id="hexDesc"></div>
-<button class="btn-extend" id="extendBtn" data-open-donation="1">Ver resultado completo</button>
+<button class="btn-extend pulse-result" id="extendBtn" data-open-donation="1">Ver resultado completo</button>
         </div>
       </div>
     </div>
@@ -1473,7 +1563,7 @@ menuPanel.onclick=()=>{
     <h4 style="color:var(--accent);margin-top:18px;">Historial de consultas</h4>
     <div id="registroLista" style="margin-top:12px;"></div>
 
-    <button class="btn-extend" id="limpiarRegistro" style="margin-top:22px;">
+    <button class="btn-extend pulse-result" id="limpiarRegistro" style="margin-top:22px;">
       Limpiar historial
     </button>
 
@@ -1792,6 +1882,573 @@ document.addEventListener("DOMContentLoaded", function(){
   setupToggle(".mode");
   setupToggle(".menu-content");
   setupToggle(".option-block");
+
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const desc = document.querySelector(".hex-desc");
+  if(desc){
+    const text = desc.innerText.trim();
+    if(text.length > 0){
+      const shortened = text.substring(0, Math.floor(text.length * 0.55));
+      desc.innerText = shortened + "...";
+    }
+  }
+});
+</script>
+
+
+
+
+
+<script>
+/* ===== MANUAL MODE UNLOCK FIX v2 (preserves coin animation) ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  function forceUnlock(){
+    const startBtn = document.querySelector("#startBtn, .btn-main");
+    if(startBtn){
+      startBtn.disabled = false;
+      startBtn.style.pointerEvents = "auto";
+      startBtn.style.opacity = "1";
+    }
+
+    // Clean coin state but DO NOT kill animation system
+    const coins = document.querySelectorAll(".coin");
+    coins.forEach(c => {
+      c.classList.remove("spin","yin","yang");
+    });
+
+    const throwBtn = document.querySelector("#throw");
+    if(throwBtn){
+      throwBtn.disabled = false;
+      throwBtn.style.pointerEvents = "auto";
+    }
+  }
+
+  // Hook into reset button
+  document.addEventListener("click", function(e){
+    if(e.target && (
+       e.target.id === "resetBtn" ||
+       e.target.innerText.toLowerCase().includes("reiniciar")
+    )){
+      setTimeout(forceUnlock, 150);
+    }
+  });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ===== CTA STATE CONTROL FIX v2 (min 5 words required) ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const startBtn = document.querySelector("#startBtn, .btn-main");
+  const textarea = document.querySelector("textarea");
+
+  if(!startBtn || !textarea) return;
+
+  function countWords(text){
+    return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+  }
+
+  function updateButtonState(){
+    const words = countWords(textarea.value);
+    const hasEnoughWords = words >= 5;
+
+    if(hasEnoughWords){
+      startBtn.disabled = false;
+      startBtn.classList.add("pulse");
+      startBtn.style.pointerEvents = "auto";
+      startBtn.style.opacity = "1";
+    }else{
+      startBtn.disabled = true;
+      startBtn.classList.remove("pulse");
+      startBtn.style.pointerEvents = "none";
+      startBtn.style.opacity = "0.6";
+    }
+  }
+
+  // Initial state
+  updateButtonState();
+
+  // Update while typing
+  textarea.addEventListener("input", updateButtonState);
+
+  // Disable immediately after click
+  startBtn.addEventListener("click", function(){
+    setTimeout(function(){
+      startBtn.disabled = true;
+      startBtn.classList.remove("pulse");
+      startBtn.style.pointerEvents = "none";
+      startBtn.style.opacity = "0.6";
+    }, 50);
+  });
+
+  // Disable after result shows
+  const resultBox = document.querySelector(".result-final");
+  if(resultBox){
+    const observer = new MutationObserver(function(){
+      if(resultBox.classList.contains("show")){
+        startBtn.disabled = true;
+        startBtn.classList.remove("pulse");
+        startBtn.style.pointerEvents = "none";
+        startBtn.style.opacity = "0.6";
+      }
+    });
+    observer.observe(resultBox, { attributes: true });
+  }
+
+});
+</script>
+
+
+<script>
+/* ===== CONSULTA SUSPENSE STEP v3 (timing enhanced) ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const startBtn = document.querySelector("#startBtn, .btn-main");
+  const textarea = document.querySelector("textarea");
+  const centerPanel = document.querySelectorAll(".panel")[1];
+  const resultBox = document.querySelector(".result-final");
+
+  if(startBtn && textarea && centerPanel && resultBox){
+
+    startBtn.addEventListener("click", function(){
+
+      const userText = textarea.value.trim();
+      if(userText.split(/\s+/).length < 5) return;
+
+      textarea.value = "";
+
+      const oldBlock = document.getElementById("suspenseBlock");
+      if(oldBlock) oldBlock.remove();
+
+      const suspenseBlock = document.createElement("div");
+      suspenseBlock.id = "suspenseBlock";
+      suspenseBlock.style.textAlign = "center";
+      suspenseBlock.style.marginTop = "30px";
+      suspenseBlock.style.opacity = "0";
+      suspenseBlock.style.transition = "opacity 0.8s ease";
+
+      suspenseBlock.innerHTML = `
+        <div style="font-size:18px; margin-bottom:12px; color:#e6c56f;">
+          <strong>Consulta realizada</strong>
+        </div>
+        <div style="font-size:14px; margin-bottom:16px;">
+          "${userText}"
+        </div>
+        <div style="font-size:14px; opacity:0.85;">
+          esperando respuesta...
+        </div>
+      `;
+
+      centerPanel.prepend(suspenseBlock);
+
+      // Fade in question
+      setTimeout(() => {
+        suspenseBlock.style.opacity = "1";
+      }, 50);
+
+      // Observe result trigger
+      const observer = new MutationObserver(function(){
+        if(resultBox.classList.contains("show")){
+
+          // Prevent instant result display
+          resultBox.classList.remove("show");
+          resultBox.style.opacity = "0";
+          resultBox.style.transform = "translateY(15px)";
+
+          // 1️⃣ Fade out question
+          suspenseBlock.style.opacity = "0";
+
+          setTimeout(() => {
+
+            // remove question slightly earlier
+            if(suspenseBlock) suspenseBlock.remove();
+
+            // 2️⃣ Wait 1 second before showing result
+            setTimeout(() => {
+
+              resultBox.classList.add("show");
+
+              setTimeout(() => {
+                resultBox.style.opacity = "1";
+                resultBox.style.transform = "translateY(0)";
+              }, 50);
+
+            }, 1000);
+
+          }, 800);
+
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(resultBox, { attributes: true });
+
+    });
+  }
+
+});
+</script>
+
+
+<style>
+/* ===== SECOND CONSULT BUTTON ===== */
+#anotherConsultBtn{
+  margin-top:22px;
+  padding:8px 18px;
+  border-radius:14px;
+  border:1px solid var(--accent);
+  background:#0d0f14;
+  color:var(--accent);
+  font-size:13px;
+  cursor:pointer;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity 0.6s ease, transform 0.6s ease;
+}
+#anotherConsultBtn.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+
+<script>
+/* ===== SECOND CONSULT BUTTON LOGIC ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const resultBox = document.querySelector(".result-final");
+
+  if(!resultBox) return;
+
+  // Create button
+  const btn = document.createElement("button");
+  btn.id = "anotherConsultBtn";
+  btn.innerText = "Volver al inicio";
+
+  resultBox.appendChild(btn);
+
+  // Show button when result appears
+  const observer = new MutationObserver(function(){
+    if(resultBox.classList.contains("show")){
+      setTimeout(() => {
+        btn.classList.add("show");
+      }, 1200);
+    }
+  });
+
+  observer.observe(resultBox, { attributes:true });
+
+  // Reset behavior (same as reiniciar)
+  btn.addEventListener("click", function(){
+
+    // Try to trigger existing reset button if exists
+    const resetBtn = document.querySelector("#resetBtn, button[id*=reset], button");
+    const reiniciar = Array.from(document.querySelectorAll("button"))
+      .find(b => b.innerText.toLowerCase().includes("reiniciar"));
+
+    if(reiniciar){
+      reiniciar.click();
+    }else if(resetBtn){
+      resetBtn.click();
+    }
+
+  });
+
+});
+</script>
+
+
+
+
+
+
+
+
+<script>
+/* ===== HEXAGRAMA DUPLICATE CLEANUP ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  function removeDuplicateHexagrama(){
+    const allNodes = Array.from(document.querySelectorAll("*"));
+    allNodes.forEach(el => {
+      if(
+        el.innerText &&
+        el.innerText.trim().toLowerCase() === "hexagrama final" &&
+        !el.closest(".result-final")
+      ){
+        el.remove();
+      }
+    });
+  }
+
+  // Run once at load
+  removeDuplicateHexagrama();
+
+  // Also observe DOM changes in case it's injected dynamically
+  const observer = new MutationObserver(function(){
+    removeDuplicateHexagrama();
+  });
+
+  observer.observe(document.body, { childList:true, subtree:true });
+
+});
+</script>
+
+
+<script>
+/* ===== RESULTADO FINAL TITLE INSERT ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const resultBox = document.querySelector(".result-final");
+  if(!resultBox) return;
+
+  function insertTitle(){
+    const existing = resultBox.querySelector(".resultado-final-title");
+    if(existing) return;
+
+    const hexChar = resultBox.querySelector(".hex-char");
+    if(!hexChar) return;
+
+    const title = document.createElement("div");
+    title.className = "resultado-final-title";
+    title.innerText = "Resultado final";
+    title.style.fontSize = "18px";
+    title.style.marginBottom = "12px";
+    title.style.color = "var(--accent)";
+    title.style.textAlign = "center";
+    title.style.opacity = "0";
+    title.style.transition = "opacity 0.8s ease";
+
+    hexChar.parentNode.insertBefore(title, hexChar);
+
+    setTimeout(() => {
+      title.style.opacity = "1";
+    }, 200);
+  }
+
+  const observer = new MutationObserver(function(){
+    if(resultBox.classList.contains("show")){
+      insertTitle();
+    }
+  });
+
+  observer.observe(resultBox, { attributes:true });
+
+});
+</script>
+
+
+<script>
+/* ===== INTERPRETANDO TIMING ENHANCEMENT v3 (extra 0.5s gap added) ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const resultBox = document.querySelector(".result-final");
+  if(!resultBox) return;
+
+  const observer = new MutationObserver(function(){
+
+    if(resultBox.classList.contains("show")){
+
+      resultBox.classList.remove("show");
+      resultBox.style.opacity = "0";
+      resultBox.style.transform = "translateY(15px)";
+
+      const interpretandoEl = Array.from(document.querySelectorAll("*"))
+        .find(el => el.innerText && el.innerText.toLowerCase().includes("interpretando"));
+
+      if(interpretandoEl){
+
+        setTimeout(() => {
+
+          interpretandoEl.style.transition = "opacity 0.6s ease";
+          interpretandoEl.style.opacity = "0";
+
+          setTimeout(() => {
+
+            // FULL EMPTY GAP (1.5 seconds total now)
+            setTimeout(() => {
+
+              resultBox.classList.add("show");
+
+              setTimeout(() => {
+                resultBox.style.opacity = "1";
+                resultBox.style.transform = "translateY(0)";
+              }, 50);
+
+            }, 1500); // was 1000, now +0.5s
+
+          }, 600);
+
+        }, 900);
+
+      } else {
+
+        setTimeout(() => {
+          resultBox.classList.add("show");
+          resultBox.style.opacity = "1";
+          resultBox.style.transform = "translateY(0)";
+        }, 1500);
+      }
+
+      observer.disconnect();
+    }
+
+  });
+
+  observer.observe(resultBox, { attributes:true });
+
+});
+</script>
+
+
+<script>
+/* ===== RITUAL THROW RESET FIX ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const textarea = document.querySelector("textarea");
+  const throwBtn = document.querySelector("#throw");
+  const startBtn = document.querySelector("#startBtn, .btn-main");
+
+  if(!textarea || !throwBtn || !startBtn) return;
+
+  function countWords(text){
+    return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+  }
+
+  function resetThrowIfNeeded(){
+    const words = countWords(textarea.value);
+
+    if(words >= 5){
+      throwBtn.disabled = false;
+      throwBtn.style.pointerEvents = "auto";
+      throwBtn.style.opacity = "1";
+    }
+  }
+
+  // When user writes new question
+  textarea.addEventListener("input", resetThrowIfNeeded);
+
+  // When pressing realizar consulta again
+  startBtn.addEventListener("click", function(){
+    setTimeout(() => {
+      throwBtn.disabled = false;
+      throwBtn.style.pointerEvents = "auto";
+      throwBtn.style.opacity = "1";
+    }, 300);
+  });
+
+});
+</script>
+
+
+<style>
+/* ===== INITIAL RITUAL COIN FADE-IN ===== */
+.coin.initial-fade{
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+}
+.coin.initial-fade.show{
+  opacity:1;
+  transform:translateY(0);
+}
+</style>
+
+<script>
+/* ===== FIX: INITIAL COIN SYMBOL RENDER + RITUAL FADE ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const ritualBtn = Array.from(document.querySelectorAll("button"))
+    .find(b => b.innerText.toLowerCase().includes("ritual manual"));
+
+  if(!ritualBtn) return;
+
+  ritualBtn.addEventListener("click", function(){
+
+    setTimeout(() => {
+
+      const coins = document.querySelectorAll(".coin");
+
+      coins.forEach((coin, index) => {
+
+        // Ensure symbol exists on first render
+        if(!coin.classList.contains("yin") && 
+           !coin.classList.contains("yang")){
+          coin.classList.add("yin");
+        }
+
+        // Add ritual fade-in effect only first time
+        if(!coin.classList.contains("initial-fade")){
+          coin.classList.add("initial-fade");
+
+          setTimeout(() => {
+            coin.classList.add("show");
+          }, 100 + (index * 120)); // staggered ceremonial entrance
+        }
+
+      });
+
+    }, 200);
+
+  });
+
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+/* ===== RIGHT PANEL VISUAL RESET (NON-DESTRUCTIVE) ===== */
+document.addEventListener("DOMContentLoaded", function(){
+
+  const startBtn = document.querySelector("#startBtn, .btn-main");
+  const panels = document.querySelectorAll(".panel");
+  const rightPanel = panels[2];
+
+  if(!startBtn || !rightPanel) return;
+
+  startBtn.addEventListener("click", function(){
+
+    // Fade out entire dynamic area without deleting content
+    rightPanel.style.opacity = "0";
+    rightPanel.style.transition = "opacity 0.25s ease";
+
+    // Wait a tiny bit before allowing rebuild
+    setTimeout(() => {
+      rightPanel.style.opacity = "1";
+    }, 300);
+
+  });
 
 });
 </script>
